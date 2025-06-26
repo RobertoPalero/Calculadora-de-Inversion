@@ -1,12 +1,15 @@
-<html lang="es">
+  <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Calculadora de inversión</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Calculadora de inversión</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
+          * === SOLUCIÓN: Oculta el título automático de GitHub Pages === */
+          .pagehead, .gh-header, .repohead, .Header { display: none !important; }
     :root {
       --fondo-claro: #f4f6f8;
       --texto-claro: #333;
@@ -14,7 +17,7 @@
       --hover: #1b4d5b;
       --tabla-head: #ddeeee;
       --boton-texto: #fff;
-      --portada: #2e3552;
+      --portada: #2b2929;
       --verde: #28a745;
       --verde-hover: #218838;
       --texto-grande: 16px;
@@ -33,6 +36,7 @@
       max-width: 900px;
       margin: auto;
       transition: background-color 0.4s, color 0.4s;
+      position: relative;
     }
     #portada {
       background-color: var(--portada);
@@ -160,11 +164,14 @@
       margin-top: 15px;
     }
     .dark-mode-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
+      position: absolute;
+      top: 30px;
+      right: 30px;
       z-index: 999;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      background-color: var(--primario);
+      padding: 8px 12px;
+      border-radius: 20px;
     }
     .leyenda {
       font-size: 14px;
@@ -206,26 +213,86 @@
       color: #e0e0e0;
       border: 1px solid #555;
     }
+
+    /* === Nuevo botón de WhatsApp === */
+    .whatsapp-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 999;
+      background-color: #25D366;
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: all 0.3s;
+    }
+
+    .whatsapp-btn:hover {
+      background-color: #128C7E;
+      transform: scale(1.1);
+    }
+
+    .whatsapp-btn i {
+      font-size: 30px;
+    }
+
+    /* Ajustes específicos para móvil */
+    @media (max-width: 768px) {
+      .input-container {
+        flex-direction: column;
+        gap: 5px;
+      }
+      .input-container input, 
+      .input-container select {
+        width: 100% !important;
+        font-size: 16px;
+      }
+      .input-container span {
+        padding-left: 0;
+        font-size: 14px;
+      }
+      #portada {
+        min-height: 100px;
+      }
+      .dark-mode-btn {
+        top: 15px;
+        right: 15px;
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+      .whatsapp-btn {
+        width: 50px;
+        height: 50px;
+        bottom: 20px;
+        right: 20px;
+      }
+    }
   </style>
 </head>
 <body>
+  <button class="dark-mode-btn" onclick="toggleDarkMode()">🌙 Modo Oscuro</button>
+
   <div id="portada">
-    <img src="https://raw.githubusercontent.com/JohanMoran/Proyeccion-de-Inversiones/main/ROBPAIERO_TUASESORDECONFIANZA.PNG" 
+    <img src="https://raw.githubusercontent.com/JohanMoran/Proyeccion-de-Inversiones/main/ROBPAIERO_TUASESORDECONFIANZA.PNG"
          alt="Calculadora de Inversión"
          style="width: 100%; max-width: 900px; height: auto; border-radius: 8px;">
   </div>
-  <button class="dark-mode-btn" onclick="toggleDarkMode()">🌙 Modo Oscuro</button>
 
-  <label>MONTO INICIAL:</label>
+  <label>Monto Inicial:</label>
   <div class="input-container">
-    <input type="number" id="capitalInicial" />
+    <input type="text" id="capitalInicial" />
     <span>¿Con qué cantidad cuentas en este momento? ¿Con cuánto empezarás tu inversión?</span>
   </div>
 
   <label>Tasa Anual (%):</label>
   <div class="input-container">
     <input type="number" id="tasa" step="0.01" />
-    <span>Tasa de Interés anual, inversionistas conservadores (renta fija) 10% - 15%.</span>
+    <span>¿Cuál es la tasa de rendimiento anual que te está ofreciendo la institución financiera?</span>
   </div>
 
   <label>Plazo (en meses):</label>
@@ -236,7 +303,7 @@
 
   <label>Aportación:</label>
   <div class="input-container">
-    <input type="number" id="aportacion" />
+    <input type="text" id="aportacion" />
     <span>¿Cuánto puedes destinar a tu inversión periódicamente para incrementar tus rendimientos?</span>
   </div>
 
@@ -294,6 +361,11 @@
     </table>
   </div>
 
+  <!-- Botón flotante de WhatsApp -->
+  <a href="https://wa.me/523324967419?text=Hola,%20me%20interesa%20saber%20más%20sobre%20inversiones%20💰📈" class="whatsapp-btn" target="_blank" title="Contactar por WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
   <script>
     let datosGrafica = [];
     let totalAportaciones = 0, totalInteres = 0, capital = 0;
@@ -306,11 +378,50 @@
       }
     }
 
+    // Función para formatear con $ mientras se escribe
+    function formatearMoneda(input) {
+      // Guardar posición del cursor
+      const cursorPosition = input.selectionStart;
+      
+      // Eliminar todos los caracteres no numéricos excepto el punto decimal
+      let valor = input.value.replace(/[^0-9.]/g, '');
+      
+      // Si está vacío, dejar vacío
+      if(valor === '') {
+        input.value = '';
+        return;
+      }
+      
+      // Convertir a número y formatear
+      const numero = parseFloat(valor);
+      if (isNaN(numero)) {
+        input.value = '';
+        return;
+      }
+      
+      // Formatear con $ y separadores de miles
+      input.value = '$' + new Intl.NumberFormat('es-MX').format(numero);
+      
+      // Restaurar posición del cursor, ajustando por los caracteres añadidos
+      const newCursorPosition = cursorPosition + (input.value.length - valor.length);
+      input.setSelectionRange(newCursorPosition, newCursorPosition);
+    }
+
+    // Asignar eventos a los inputs monetarios
+    document.getElementById('capitalInicial').addEventListener('input', function() {
+      formatearMoneda(this);
+    });
+    
+    document.getElementById('aportacion').addEventListener('input', function() {
+      formatearMoneda(this);
+    });
+
     function calcular() {
-      const capitalInicial = parseFloat(document.getElementById('capitalInicial').value) || 0;
+      // Limpiar el $ para los cálculos
+      const capitalInicial = parseFloat(document.getElementById('capitalInicial').value.replace(/[^0-9.]/g, '')) || 0;
       const tasa = parseFloat(document.getElementById('tasa').value) || 0;
       const plazo = parseInt(document.getElementById('plazo').value) || 0;
-      const aportacion = parseFloat(document.getElementById('aportacion').value) || 0;
+      const aportacion = parseFloat(document.getElementById('aportacion').value.replace(/[^0-9.]/g, '')) || 0;
       const periodicidad = parseInt(document.getElementById('periodicidad').value) || 1;
       const capitalObjetivo = parseFloat(document.getElementById('capitalObjetivo').value) || null;
       const fechaInicio = new Date(document.getElementById('fechaInicio').value);
@@ -353,7 +464,6 @@
         totalInteres += interes;
         capital += interes;
         
-        // Determinar si este mes corresponde a una aportación
         const esAportacion = (i - 1) % periodicidad === 0;
         if (esAportacion) {
           capital += aportacion;
@@ -363,7 +473,6 @@
         const fecha = new Date(fechaInicio);
         fecha.setMonth(fecha.getMonth() + i);
 
-        // Mostrar todas las filas con $0.00 en aportación cuando no corresponde
         tabla.innerHTML += `
           <tr>
             <td>${i}</td>
@@ -492,7 +601,6 @@
         format: 'a4'
       });
       
-      // --- Título y encabezado ---
       doc.setFontSize(20);
       doc.setTextColor(43, 103, 119);
       doc.setFont('helvetica', 'bold');
@@ -501,7 +609,6 @@
       doc.setLineWidth(0.5);
       doc.line(20, 20, 190, 20);
       
-      // --- Datos de la inversión ---
       doc.setFontSize(12);
       doc.setTextColor(0, 0, 0);
       doc.setFont('helvetica', 'normal');
@@ -509,10 +616,10 @@
       doc.rect(20, 25, 170, 30, 'F');
       doc.text("Datos de la inversión", 25, 30);
       
-      const capitalInicial = parseFloat(document.getElementById('capitalInicial').value) || 0;
+      const capitalInicial = parseFloat(document.getElementById('capitalInicial').value.replace(/[^0-9.]/g, '')) || 0;
       const tasa = parseFloat(document.getElementById('tasa').value) || 0;
       const plazo = parseInt(document.getElementById('plazo').value) || 0;
-      const aportacion = parseFloat(document.getElementById('aportacion').value) || 0;
+      const aportacion = parseFloat(document.getElementById('aportacion').value.replace(/[^0-9.]/g, '')) || 0;
       const periodicidad = parseInt(document.getElementById('periodicidad').value) || 1;
       
       let periodicidadTexto = '';
@@ -528,7 +635,6 @@
       doc.text(`Tasa anual: ${tasa}% | Plazo: ${plazo} meses`, 25, 44);
       doc.text(`Aportación ${periodicidadTexto}: ${formatCurrency(aportacion)}`, 25, 51);
       
-      // --- Resultados finales ---
       doc.setFillColor(230, 245, 230);
       doc.rect(20, 60, 170, 20, 'F');
       doc.text("Resultados finales", 25, 65);
@@ -538,21 +644,14 @@
       doc.text(`Total acumulado: ${formatCurrency(capital)}`, 25, 79);
       doc.setFont('helvetica', 'normal');
 
-      // --- Gráfico (antes que la tabla) ---
-      // Asegurar que el gráfico esté actualizado
-      if (chart) {
-        chart.update();
-      }
-
       setTimeout(() => {
         const canvas = document.getElementById('grafica');
-        const imgData = canvas.toDataURL('image/png', 1.0); // Calidad al 100%
-        doc.addImage(imgData, 'PNG', 20, 85, 170, 80); // Posición después de los resultados (85 en Y)
+        const imgData = canvas.toDataURL('image/png', 1.0);
+        doc.addImage(imgData, 'PNG', 20, 85, 170, 80);
 
-        // --- Tabla (después del gráfico) ---
         doc.autoTable({
           html: '#tablaResultados',
-          startY: 170, // Ajustado para que esté después del gráfico
+          startY: 170,
           theme: 'grid',
           headStyles: {
             fillColor: [43, 103, 119],
@@ -571,13 +670,12 @@
           }
         });
 
-        // Pie de página
         doc.setFontSize(10);
         doc.setTextColor(100);
         doc.text("© Calculadora de Inversión - " + new Date().toLocaleDateString(), 105, 285, { align: 'center' });
         
         doc.save('reporte_inversion.pdf');
-      }, 300); // Retraso para renderizar el gráfico
+      }, 300);
     }
 
     function descargarCSV() {
@@ -591,8 +689,8 @@
       
       rows.forEach(row => {
         const cells = row.querySelectorAll('td');
-        const aportacionValue = cells[2].textContent === '$0.00' ? '0' : cells[2].textContent.replace('$','');
-        csv += `"${cells[0].textContent}","${cells[1].textContent}","${aportacionValue}","${cells[3].textContent.replace('$','')}","${cells[4].textContent.replace('$','')}"\n`;
+        const aportacionValue = cells[2].textContent === '$0.00' ? '0' : cells[2].textContent.replace(/[^0-9.]/g, '');
+        csv += `"${cells[0].textContent}","${cells[1].textContent}","${aportacionValue}","${cells[3].textContent.replace(/[^0-9.]/g, '')}","${cells[4].textContent.replace(/[^0-9.]/g, '')}"\n`;
       });
       
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
